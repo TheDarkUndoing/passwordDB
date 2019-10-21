@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: net.anubis.passwordDB.Main
+Class-Path: commons-compress-1.19.jar
+
