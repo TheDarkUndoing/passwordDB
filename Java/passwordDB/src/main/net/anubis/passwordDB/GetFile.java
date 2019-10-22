@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
+import java.util.ArrayList;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -43,39 +44,26 @@ public class GetFile
 
   public TarArchiveEntry[] getEntries(TarArchiveInputStream tis) throws IOException
   {
+    ArrayList<TarArchiveEntry> tarEntryArray = new ArrayList<TarArchiveEntry>();
     TarArchiveInputStream currentStream = tis;
     TarArchiveEntry currentEntry = null;
-    int streamSize = -1;
     currentStream.getNextTarEntry();
     while ((currentEntry = currentStream.getCurrentEntry()) != null)
     {
 
-      streamSize++;
+      tarEntryArray.add(currentEntry);
       currentStream.getNextTarEntry();
     }
-    currentStream.reset();
-    TarArchiveEntry[] tarEntryArray = new TarArchiveEntry[streamSize];
-    //currentStream = tis;
-    // currentEntry = currentStream.getCurrentEntry();
-    // currentStream.getNextTarEntry();
-    /*
-    HOW to bypass TarArchiveInputStream lack of reset
-    Change ARRAY to array list to dynamically add Entries thenconvert to ARRAY
-    */
-    for(int i = 0 ; i < streamSize;i++)
-    {
-      currentEntry = currentStream.getCurrentEntry();
-      System.out.println(currentEntry.getName());
-      currentStream.getNextTarEntry();
-      if (currentEntry != null)
-      {
-        tarEntryArray[i] = currentEntry;
-      }
+    currentStream.close();
 
+    TarArchiveEntry[] tarEntryArray_final = new TarArchiveEntry[tarEntryArray.size()];
+    for (int counter = 0; counter < tarEntryArray.size(); counter++)
+    {
+      	tarEntryArray_final[counter] = tarEntryArray.get(counter);
     }
-    //System.out.println(tarEntryArray.toString());
-    return tarEntryArray;
+    return (TarArchiveEntry[])tarEntryArray_final;
+    }
+    
+
 
   }
-
-}

@@ -23,7 +23,7 @@ public class Main
         TarArchiveEntry[] tarEntryArray = GetFile.getEntries(tis);
 
         for (int i = 0 ; i < tarEntryArray.length; i++)
-        System.out.println(tarEntryArray[i]);
+        System.out.println(tarEntryArray[i].getName());
 
       } catch (IOException e)
       {
