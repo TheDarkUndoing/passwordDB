@@ -27,18 +27,54 @@ public class GetFile
       return tarFile;
 
   }
-  public void readTarArchive(File tarFile)throws IOException
+  public TarArchiveInputStream getTarArchiveStream(File tarFile)throws IOException
   {
     FileInputStream fis = new FileInputStream(tarFile);
     TarArchiveInputStream tis = new TarArchiveInputStream(fis);
-    TarArchiveEntry currentEntry = null;
-    tis.getNextTarEntry();
-    while ((currentEntry = tis.getCurrentEntry()) != null)
-    {
-      System.out.println(currentEntry.getName());
-      tis.getNextTarEntry();
-    }
+    // TarArchiveEntry currentEntry = null;
+    // tis.getNextTarEntry();
+    // while ((currentEntry = tis.getCurrentEntry()) != null)
+    // {
+    //   System.out.println(currentEntry.getName());
+    //   tis.getNextTarEntry();
+    // }
+    return tis;
+  }
 
+  public TarArchiveEntry[] getEntries(TarArchiveInputStream tis) throws IOException
+  {
+    TarArchiveInputStream currentStream = tis;
+    TarArchiveEntry currentEntry = null;
+    int streamSize = -1;
+    currentStream.getNextTarEntry();
+    while ((currentEntry = currentStream.getCurrentEntry()) != null)
+    {
+
+      streamSize++;
+      currentStream.getNextTarEntry();
+    }
+    currentStream.reset();
+    TarArchiveEntry[] tarEntryArray = new TarArchiveEntry[streamSize];
+    //currentStream = tis;
+    // currentEntry = currentStream.getCurrentEntry();
+    // currentStream.getNextTarEntry();
+    /*
+    HOW to bypass TarArchiveInputStream lack of reset
+    Change ARRAY to array list to dynamically add Entries thenconvert to ARRAY
+    */
+    for(int i = 0 ; i < streamSize;i++)
+    {
+      currentEntry = currentStream.getCurrentEntry();
+      System.out.println(currentEntry.getName());
+      currentStream.getNextTarEntry();
+      if (currentEntry != null)
+      {
+        tarEntryArray[i] = currentEntry;
+      }
+
+    }
+    //System.out.println(tarEntryArray.toString());
+    return tarEntryArray;
 
   }
 
