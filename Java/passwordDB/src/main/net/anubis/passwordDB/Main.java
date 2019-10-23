@@ -21,9 +21,16 @@ public class Main
 
         TarArchiveInputStream tis = GetFile.getTarArchiveStream(tarFile);
         TarArchiveEntry[] tarEntryArray = GetFile.getEntries(tis);
-
+        String entryName =null;
+        int entryStartOffset = 0;
         for (int i = 0 ; i < tarEntryArray.length; i++)
-        System.out.println(tarEntryArray[i].getName());
+        {
+          entryName = tarEntryArray[i].getName();
+          entryStartOffset = parseFile.findTarEntry(inputFile,entryName);
+
+          System.out.println(entryName);
+          System.out.println(entryStartOffset);
+        }
 
       } catch (IOException e)
       {

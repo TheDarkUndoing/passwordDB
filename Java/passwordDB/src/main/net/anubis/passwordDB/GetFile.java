@@ -63,7 +63,9 @@ public class GetFile
     }
     return (TarArchiveEntry[])tarEntryArray_final;
     }
-    
+
+  // public
+
 
 
   }
