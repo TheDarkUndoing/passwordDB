@@ -16,6 +16,7 @@ public class Main
         String INPUT_FILE_PATH = args[0];
         String OUTPUT_FILE_PATH = "tarfile_test.tar";
         File inputFile = new File(INPUT_FILE_PATH);
+
         File tarFile = new File(OUTPUT_FILE_PATH);
         tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
 
@@ -26,9 +27,8 @@ public class Main
         for (int i = 0 ; i < tarEntryArray.length; i++)
         {
           entryName = tarEntryArray[i].getName();
-          entryStartOffset = parseFile.findTarEntry(inputFile,entryName);
-
           System.out.println(entryName);
+          entryStartOffset = parseFile.findTarEntry(tarFile,entryName);
           System.out.println(entryStartOffset);
         }
 
