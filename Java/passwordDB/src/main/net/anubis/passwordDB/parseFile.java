@@ -1,6 +1,7 @@
 package net.anubis.passwordDB;
 import java.io.IOException;
 //import java.io.FileReader;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
@@ -13,7 +14,8 @@ public class parseFile
 
 /*
 Returns absoulute offset of start location of tar entry
-
+TODO increase effeciency of findTar
+entry so that it doesnt parse entire file every time
 */
   public static int findTarEntry(File tarfile, String entryName)throws IOException
   {
@@ -64,16 +66,26 @@ Returns absoulute offset of start location of tar entry
   {
     FileInputStream fis = new FileInputStream(tarFile);
     long entrySize = tarEntry.getSize();
+    long bytesRead = 0;
+  //  byte[] readbuffer = new byte[1024];
+    ArrayList<Byte> readBuffer = new ArrayList<Byte>();
     //Skips to beginning of entryand then jumps 512 bytes to start of entry's data
     //TAR Entries are 512 byte entries
-    //TODO Reasearch TAR format and find distance from name field to data
     fis.skip(entryStartOffset+512);
 
 
-    // while(bytesRead < entrySize )
-    // {
-    //   break;
-    // }
+    byte curByte = 0;
+    while(bytesRead < entrySize )
+    {
+      curByte = fis.read();
+      bytesRead++;
+
+      if(curByte != 10 && curByte != 13)
+      {
+        readBuffer.add(curByte);
+      }
+
+    }
 
 
   }
