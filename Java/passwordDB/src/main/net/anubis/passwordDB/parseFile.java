@@ -12,9 +12,9 @@ public class parseFile
 Returns absoulute offset of start location of tar entry
 
 */
-  public static int findTarEntry(File file, String entryName)throws IOException
+  public static int findTarEntry(File tarfile, String entryName)throws IOException
   {
-    FileInputStream fis = new FileInputStream(file);
+    FileInputStream fis = new FileInputStream(tarfile);
     byte[] readArea;
     byte[] entryNameBytes;
     int namelength = entryName.length();
@@ -50,5 +50,14 @@ Returns absoulute offset of start location of tar entry
 
     }
     return offset;
+  }
+
+  public static void readTarEntry(File tarFile, int entryStartOffset)
+  {
+    FileInputStream fis = new FileInputStream(tarfile);
+    //Skips to file name and then jumps 479[0x1DF] bytes ahead to start of entry data
+    //TODO Reasearch TAR format and find distance from name field to data
+    fis.skip(entryStartOffset+479);
+
   }
 }
