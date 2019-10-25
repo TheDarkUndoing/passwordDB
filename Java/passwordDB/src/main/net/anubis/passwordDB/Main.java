@@ -12,7 +12,8 @@ public class Main
   {
     try{
       GetFile GetFile = new GetFile();
-        //String INPUT_FILE_PATH = "/media/user/DATA/FrostWire/Torrent Data/Collection 1/Collection  #1_BTC combos.tar.gz";
+        //String INPUT_FILE_PATH = "/media/user/DATA/FrostWire/Torrent
+        //Data/Collection 1/Collection  #1_BTC combos.tar.gz";
         String INPUT_FILE_PATH = args[0];
         String OUTPUT_FILE_PATH = "tarfile_test.tar";
         File inputFile = new File(INPUT_FILE_PATH);
