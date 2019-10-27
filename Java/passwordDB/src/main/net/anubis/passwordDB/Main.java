@@ -31,6 +31,8 @@ public class Main
           System.out.println(entryName);
           entryStartOffset = parseFile.findTarEntry(tarFile,entryName);
           System.out.println(entryStartOffset);
+
+          parseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i]);
         }
 
       } catch (IOException e)

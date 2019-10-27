@@ -67,6 +67,8 @@ entry so that it doesnt parse entire file every time
     FileInputStream fis = new FileInputStream(tarFile);
     long entrySize = tarEntry.getSize();
     long bytesRead = 0;
+    String string = null;
+    byte[] line= new byte[0];
   //  byte[] readbuffer = new byte[1024];
     ArrayList<Byte> readBuffer = new ArrayList<Byte>();
     //Skips to beginning of entryand then jumps 512 bytes to start of entry's data
@@ -77,16 +79,35 @@ entry so that it doesnt parse entire file every time
     byte curByte = 0;
     while(bytesRead < entrySize )
     {
-      curByte = fis.read();
+      curByte = (byte)fis.read();
       bytesRead++;
 
       if(curByte != 10 && curByte != 13)
       {
         readBuffer.add(curByte);
       }
+      else
+      {
+        line = byteListToArray(readBuffer);
+        readBuffer.clear();
+
+        string = new String(line , StandardCharsets.UTF_8);
+        //System.out.println(Arrays.toString(line));
+        System.out.println(string);
+      }
+
 
     }
 
 
+  }
+  private static byte[] byteListToArray(ArrayList<Byte> arrayList)
+  {
+    byte[] a = new byte[arrayList.size()];
+    for(int i = 0;i < arrayList.size();i++)
+    {
+      a[i] = arrayList.get(i);
+    }
+    return a;
   }
 }
