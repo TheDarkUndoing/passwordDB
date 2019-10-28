@@ -82,12 +82,14 @@ entry so that it doesnt parse entire file every time
       curByte = (byte)fis.read();
       bytesRead++;
 
-      if(curByte != 10 && curByte != 13)
+      if (curByte != 10 && curByte != 13 )
       {
-        readBuffer.add(curByte);
-      }
-      else
-      {
+        while(curByte != 10 && curByte != 13)
+        {
+          readBuffer.add(curByte);
+          curByte = (byte)fis.read();
+          bytesRead++;
+        }
         line = byteListToArray(readBuffer);
         readBuffer.clear();
 
@@ -95,6 +97,11 @@ entry so that it doesnt parse entire file every time
         //System.out.println(Arrays.toString(line));
         System.out.println(string);
       }
+
+
+
+
+
 
 
     }
