@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 
-public class parseFile
+public class ParseFile
 {
 
 /*
@@ -69,6 +69,7 @@ entry so that it doesnt parse entire file every time
     long bytesRead = 0;
     String string = null;
     byte[] line= new byte[0];
+    String[] passCombo;
   //  byte[] readbuffer = new byte[1024];
     ArrayList<Byte> readBuffer = new ArrayList<Byte>();
     //Skips to beginning of entryand then jumps 512 bytes to start of entry's data
@@ -96,6 +97,15 @@ entry so that it doesnt parse entire file every time
         string = new String(line , StandardCharsets.UTF_8);
         //System.out.println(Arrays.toString(line));
         System.out.println(string);
+        if (string.contains(";"))
+        {
+          passCombo = string.split(";");
+        }
+        else if(string.contains(":"))
+        {
+          passCombo = string.split(":");
+        }
+
       }
 
 
