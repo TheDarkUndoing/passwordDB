@@ -1,0 +1,6 @@
+Database Schema
+{
+"user":"username or email"
+"pass":["pass","word"]
+"count" : 2
+}
