@@ -17,4 +17,5 @@ dependencies
 {
   compile 'org.apache.commons:commons-compress:1.19'
   runtimeElements 'org.apache.commons:commons-compress:1.19'
+  compile 'org.mongodb:mongodb-driver-sync:3.11.1'
 }
