@@ -70,6 +70,7 @@ entry so that it doesnt parse entire file every time
     String string = null;
     byte[] line= new byte[0];
     String[] passCombo;
+    DatabaseHandler mongodb = new DatabaseHandler("passwordDB","passwordByUser");
   //  byte[] readbuffer = new byte[1024];
     ArrayList<Byte> readBuffer = new ArrayList<Byte>();
     //Skips to beginning of entryand then jumps 512 bytes to start of entry's data
@@ -105,7 +106,7 @@ entry so that it doesnt parse entire file every time
         {
           passCombo = string.split(":");
         }
-
+        mongodb.insert(passCombo);
       }
 
 

@@ -1,5 +1,11 @@
 package net.anubis.passwordDB;
-import com.mongodb.client.MongoClients;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 
 public class DatabaseHandler
@@ -12,6 +18,8 @@ public class DatabaseHandler
   {
     database = mongoClient.getDatabase(database);
     collection = database.getCollection(collection);
+    System.out.println("Database: "+database+"\nCollection: "+collection+"\nCONNECTED");
+
   }
   public void insert(String[] passCombo)
   {
@@ -23,6 +31,7 @@ public class DatabaseHandler
     {
       wd = new Document("user",username)
               .append("pass",Arrays.asList(password))
+              .append("count",1);
     }
     else
     {
