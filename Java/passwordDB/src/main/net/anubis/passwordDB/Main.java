@@ -29,10 +29,10 @@ public class Main
         {
           entryName = tarEntryArray[i].getName();
           System.out.println(entryName);
-          entryStartOffset = parseFile.findTarEntry(tarFile,entryName);
+          entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
           System.out.println(entryStartOffset);
 
-          parseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i]);
+          ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i]);
         }
 
       } catch (IOException e)

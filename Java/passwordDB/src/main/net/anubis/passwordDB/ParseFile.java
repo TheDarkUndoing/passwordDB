@@ -69,7 +69,7 @@ entry so that it doesnt parse entire file every time
     long bytesRead = 0;
     String string = null;
     byte[] line= new byte[0];
-    String[] passCombo;
+    String[] passCombo = null;
     DatabaseHandler mongodb = new DatabaseHandler("passwordDB","passwordByUser");
   //  byte[] readbuffer = new byte[1024];
     ArrayList<Byte> readBuffer = new ArrayList<Byte>();

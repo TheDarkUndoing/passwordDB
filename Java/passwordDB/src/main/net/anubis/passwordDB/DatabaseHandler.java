@@ -1,11 +1,14 @@
 package net.anubis.passwordDB;
+import java.util.Arrays;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClients;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import static com.mongodb.client.model.Filters.*;
+
 
 
 public class DatabaseHandler
@@ -16,8 +19,8 @@ public class DatabaseHandler
 
   public DatabaseHandler(String database,String collection)
   {
-    database = mongoClient.getDatabase(database);
-    collection = database.getCollection(collection);
+    this.database = mongoClient.getDatabase(database);
+    this.collection = this.database.getCollection(collection);
     System.out.println("Database: "+database+"\nCollection: "+collection+"\nCONNECTED");
 
   }
@@ -25,9 +28,9 @@ public class DatabaseHandler
   {
     String username = passCombo[0];
     String password = passCombo[1];
-    Document wd;
+    Document wd = collection.find(eq("user",username)).first();
 
-    if(wd = collection.find(eq("user",username)).first() == null)
+    if(wd.isEmpty())
     {
       wd = new Document("user",username)
               .append("pass",Arrays.asList(password))
