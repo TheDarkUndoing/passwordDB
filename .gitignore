@@ -1,3 +1,4 @@
 /Java/passwordDB/.gradle/*
 **.tar
 **.class
+**MANIFEST.MF
