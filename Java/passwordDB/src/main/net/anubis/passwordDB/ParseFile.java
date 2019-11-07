@@ -62,7 +62,7 @@ entry so that it doesnt parse entire file every time
     return offset;
   }
 
-  public static void readTarEntry(File tarFile, int entryStartOffset, TarArchiveEntry tarEntry) throws IOException
+  public static void readTarEntry(File tarFile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandler mongodb) throws IOException
   {
     FileInputStream fis = new FileInputStream(tarFile);
     long entrySize = tarEntry.getSize();
@@ -70,7 +70,7 @@ entry so that it doesnt parse entire file every time
     String string = null;
     byte[] line= new byte[0];
     String[] passCombo = null;
-    DatabaseHandler mongodb = new DatabaseHandler("passwordDB","passwordByUser");
+
   //  byte[] readbuffer = new byte[1024];
     ArrayList<Byte> readBuffer = new ArrayList<Byte>();
     //Skips to beginning of entryand then jumps 512 bytes to start of entry's data

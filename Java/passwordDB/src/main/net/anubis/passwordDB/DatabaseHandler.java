@@ -43,4 +43,8 @@ public class DatabaseHandler
 
 
   }
+  public void close()
+  {
+    this.mongoClient.close();
+  }
 }
