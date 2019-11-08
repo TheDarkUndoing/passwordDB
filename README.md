@@ -1,8 +1,14 @@
 # passwordDB
 Currently a database builder for the Collection password leak.
 Eventually going to be a full web application.
+
 <br>
 latest release version: ![version](https://img.shields.io/github/v/tag/TheDarkUndoing/passwordDB)
+
+
+
+
+
 ## Prerequisite
 - [MongoDB 3.8+](https://www.mongodb.com/download-center/community)
 
