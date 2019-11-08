@@ -3,7 +3,7 @@ Currently a database builder for the Collection password leak.
 Eventually going to be a full web application.
 
 <br>
-latest release version: ![version](https://img.shields.io/github/v/tag/TheDarkUndoing/passwordDB)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/TheDarkUndoing/passwordDB)
 
 
 
