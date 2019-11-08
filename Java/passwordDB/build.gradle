@@ -2,21 +2,37 @@ plugins {
     id 'java'
 }
 
-sourceSets.main.java.srcDir "src/main"
-
-jar {
-  manifest.attributes "Main-Class": "net.anubis.passwordDB.Main"
-  manifest.attributes "Class-Path": "commons-compress-1.19.jar"
-
+sourceSets {
+    main {
+        resources {
+            srcDirs "libs"
+        }
+    }
 }
 
 repositories {
     mavenCentral()
+
 }
 
 dependencies
 {
   compile 'org.apache.commons:commons-compress:1.19'
   compile 'org.mongodb:mongodb-driver-sync:3.11.2'
+}
+
+jar {
+println configurations.runtimeClasspath.files
+  manifest.attributes "Main-Class": "net.anubis.passwordDB.Main"
+
+
+  from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+
+
 
 }
