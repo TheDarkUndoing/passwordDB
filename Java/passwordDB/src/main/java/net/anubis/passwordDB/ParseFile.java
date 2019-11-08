@@ -97,7 +97,7 @@ entry so that it doesnt parse entire file every time
 
         string = new String(line , StandardCharsets.UTF_8);
         //System.out.println(Arrays.toString(line));
-        System.out.println(string);
+        //System.out.println(string);
         if (string.contains(";"))
         {
           passCombo = string.split(";");
