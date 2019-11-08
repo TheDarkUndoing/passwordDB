@@ -2,6 +2,10 @@
 Currently a database builder for the Collection password leak.
 Eventually going to be a full web application.
 
+[![version](https://img.shields.io/github/v/tag/TheDarkUndoing/passwordDB)](https://github.com/TheDarkUndoing/passwordDB/releases)
+
+
+
 
 
 ## Prerequisite
@@ -28,4 +32,4 @@ Take jar from build/libs/ and place in same folder with testData.tar.gz
 $ java -jar passwordDB.jar testData.tar.gz
 ```
 
-If there are any features you would like or issues you have please open a [ticket].(https://github.com/TheDarkUndoing/passwordDB/issues/)
+If there are any features you would like or issues you have please open a [ticket](https://github.com/TheDarkUndoing/passwordDB/issues/).
