@@ -22,7 +22,7 @@ dependencies
 }
 
 jar {
-println configurations.runtimeClasspath.files
+
   manifest.attributes "Main-Class": "net.anubis.passwordDB.Main"
 
 

@@ -29,8 +29,7 @@ public class DatabaseHandler
     String username = passCombo[0];
     String password = passCombo[1];
     Document wd = collection.find(eq("user",username)).first();
-
-    if(wd.isEmpty())
+    if(wd == null)
     {
       wd = new Document("user",username)
               .append("pass",Arrays.asList(password))
@@ -40,6 +39,7 @@ public class DatabaseHandler
     {
 
     }
+    this.collection.insertOne(wd);
 
 
   }
