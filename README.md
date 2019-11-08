@@ -1,6 +1,5 @@
 # passwordDB
-Currently a database builder for the Collection password leak
-Eventually going to be a full web application
+Currently a database builder for the Collection password leak. Eventually going to be a full web application.
 
 ## Prerequisite
 - [MongoDB 3.8+](https://www.mongodb.com/download-center/community)
