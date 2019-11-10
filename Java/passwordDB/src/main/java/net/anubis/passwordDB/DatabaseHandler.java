@@ -32,7 +32,11 @@ public class DatabaseHandler
   {
     String username = passCombo[0];
     String password = passCombo[1];
+    long startFind = System.currentTimeMillis();
     Document wd = collection.find(eq("user",username)).first();
+    long endFind = System.currentTimeMillis();
+    System.out.println((endFind - startFind) + "ms Find Doc");
+
     if(wd == null)
     {
       wd = new Document("user",username)
@@ -42,14 +46,19 @@ public class DatabaseHandler
     }
     else
     {
+      long startpassCheck = System.currentTimeMillis();
 
       passList = (ArrayList)wd.get("pass");
+
       if(!passList.contains(password))
       {
         entryCount = (int)wd.get("count");
-        System.out.println(entryCount);
+        //System.out.println(entryCount);
         this.collection.updateOne(eq("user",username), combine(set("count",entryCount + 1),push("pass",password)));
       }
+      long endpassCheck = System.currentTimeMillis();
+
+      System.out.println((endpassCheck-startpassCheck) + "ms passcheck");
 
     }
 

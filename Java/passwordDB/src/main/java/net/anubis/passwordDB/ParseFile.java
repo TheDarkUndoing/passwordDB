@@ -70,6 +70,7 @@ entry so that it doesnt parse entire file every time
     String string = null;
     byte[] line= new byte[0];
     String[] passCombo = null;
+    int lineCount = 0;
 
   //  byte[] readbuffer = new byte[1024];
     ArrayList<Byte> readBuffer = new ArrayList<Byte>();
@@ -81,6 +82,7 @@ entry so that it doesnt parse entire file every time
     byte curByte = 0;
     while(bytesRead < entrySize )
     {
+
       curByte = (byte)fis.read();
       bytesRead++;
 
@@ -92,25 +94,44 @@ entry so that it doesnt parse entire file every time
           curByte = (byte)fis.read();
           bytesRead++;
         }
+
         line = byteListToArray(readBuffer);
         readBuffer.clear();
 
+
+
         string = new String(line , StandardCharsets.UTF_8);
+        System.out.println(lineCount);
+        lineCount++;
         //System.out.println(Arrays.toString(line));
         //System.out.println(string);
         if (string.contains(";"))
         {
+          long startLine = System.currentTimeMillis();
           passCombo = string.split(";");
-          mongodb.insert(passCombo);
-
+          if(passCombo.length == 2)
+          {
+            mongodb.insert(passCombo);
+          }
+          long endLine = System.currentTimeMillis();
+          System.out.println((endLine-startLine) +"ms insert");
         }
         else if(string.contains(":"))
         {
+
+
+          long startLine = System.currentTimeMillis();
           passCombo = string.split(":");
-          mongodb.insert(passCombo);
+          if(passCombo.length == 2)
+          {
+            mongodb.insert(passCombo);
+          }
+
+          long endLine = System.currentTimeMillis();
+          System.out.println((endLine-startLine) +"ms insert");
 
         }
-        
+
       }
 
 
