@@ -1,6 +1,2 @@
-/Java/passwordDB/.gradle/*
-**.tar
-**.class
-**MANIFEST.MF
-**.jar
-/Java/passwordDB/build/*
+/Java/passwordDB/.gradle/
+/Java/passwordDB/build/

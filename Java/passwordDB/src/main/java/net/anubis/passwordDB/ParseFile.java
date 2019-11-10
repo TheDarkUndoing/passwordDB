@@ -101,12 +101,16 @@ entry so that it doesnt parse entire file every time
         if (string.contains(";"))
         {
           passCombo = string.split(";");
+          mongodb.insert(passCombo);
+
         }
         else if(string.contains(":"))
         {
           passCombo = string.split(":");
+          mongodb.insert(passCombo);
+
         }
-        mongodb.insert(passCombo);
+        
       }
 
 

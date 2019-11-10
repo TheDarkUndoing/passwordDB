@@ -42,12 +42,12 @@ public class DatabaseHandler
     }
     else
     {
-      entryCount = (int)wd.get("count");
-      System.out.println(entryCount);
+
       passList = (ArrayList)wd.get("pass");
       if(!passList.contains(password))
       {
-
+        entryCount = (int)wd.get("count");
+        System.out.println(entryCount);
         this.collection.updateOne(eq("user",username), combine(set("count",entryCount + 1),push("pass",password)));
       }
 
