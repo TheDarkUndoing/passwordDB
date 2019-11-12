@@ -9,6 +9,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
+import java.util.HashSet;
 
 
 
@@ -19,6 +20,8 @@ public class DatabaseHandler
   private MongoCollection<Document> collection;
   private ArrayList passList;
   private int entryCount;
+  private HashSet<String> userIndex = new HashSet<String>();
+
 
 
   public DatabaseHandler(String database,String collection)
@@ -28,17 +31,24 @@ public class DatabaseHandler
     System.out.println("Database: "+database+"\nCollection: "+collection+"\nCONNECTED");
 
   }
+  public void addUserToIndex(String user)
+  {
+    this.userIndex.add(user);
+  }
+  public boolean seen(String user)
+  {
+    return this.userIndex.contains(user);
+  }
   public void insert(String[] passCombo)
   {
     String username = passCombo[0];
     String password = passCombo[1];
-    long startFind = System.currentTimeMillis();
-    Document wd = collection.find(eq("user",username)).first();
-    long endFind = System.currentTimeMillis();
-    System.out.println((endFind - startFind) + "ms Find Doc");
+    Document wd = null;
 
-    if(wd == null)
+
+    if(!seen(username))
     {
+      addUserToIndex(username);
       wd = new Document("user",username)
               .append("pass",Arrays.asList(password))
               .append("count",1);
@@ -46,6 +56,10 @@ public class DatabaseHandler
     }
     else
     {
+      long startFind = System.currentTimeMillis();
+      wd = collection.find(eq("user",username)).first();
+      long endFind = System.currentTimeMillis();
+      System.out.println((endFind - startFind) + "ms Find Doc");
       long startpassCheck = System.currentTimeMillis();
 
       passList = (ArrayList)wd.get("pass");
