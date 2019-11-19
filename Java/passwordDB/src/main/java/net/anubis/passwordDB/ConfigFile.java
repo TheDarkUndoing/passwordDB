@@ -9,7 +9,7 @@ import java.util.Properties;
 public class ConfigFile
 {
   private String path;
-  private Properties config;
+  private Properties config = new Properties();
 
   public ConfigFile(String path)
   {
@@ -19,13 +19,13 @@ public class ConfigFile
   {
     try (InputStream input = new FileInputStream(this.path))
     {
-      Properties config = new Properties();
-      config.load(input);
+      //Properties config = new Properties();
+      this.config.load(input);
     } catch (IOException ex)
     {
       ex.printStackTrace();
     }
-    return config;
+    return this.config;
   }
   public void makeDBConfig()
   {

@@ -16,7 +16,7 @@ public class DatabaseHandlerMariaDB
   {
     config.makeDBConfig();
     this.prop = config.load();
-     System.out.println(this.prop.getProperty("db.url"));
+    String url = prop.getProperty("db.url");
     String password = prop.getProperty("db.password");
     String username = prop.getProperty("db.username");
 
