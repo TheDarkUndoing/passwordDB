@@ -17,7 +17,7 @@ public class Main
         String INPUT_FILE_PATH = args[0];
         String OUTPUT_FILE_PATH = "tarfile_test.tar";
         File inputFile = new File(INPUT_FILE_PATH);
-        DatabaseHandlerMongo mongodb = new DatabaseHandler("passwordDB","passwordByUser");
+        DatabaseHandlerMariaDB mariadb = new DatabaseHandlerMariaDB();
         File tarFile = new File(OUTPUT_FILE_PATH);
         tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
 
@@ -32,7 +32,7 @@ public class Main
           entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
           System.out.println(entryStartOffset);
 
-          ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mongodb);
+          ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
         }
 
       } catch (IOException e)

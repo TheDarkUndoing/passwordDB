@@ -2,13 +2,7 @@ plugins {
     id 'java'
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs "libs"
-        }
-    }
-}
+
 
 repositories {
     mavenCentral()
@@ -17,8 +11,8 @@ repositories {
 
 dependencies
 {
-  compile 'org.apache.commons:commons-compress:1.19'
-  compile 'org.mongodb:mongodb-driver-sync:3.11.2'
+  implementation 'org.apache.commons:commons-compress:1.19'
+  implementation 'org.mongodb:mongodb-driver-sync:3.11.2'
   implementation 'org.mariadb.jdbc:mariadb-java-client:2.4.4'
 }
 
