@@ -62,7 +62,7 @@ entry so that it doesnt parse entire file every time
     return offset;
   }
 
-  public static void readTarEntry(File tarFile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandler mongodb) throws IOException
+  public static void readTarEntry(File tarFile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandlerMongo mongodb) throws IOException
   {
     FileInputStream fis = new FileInputStream(tarFile);
     long entrySize = tarEntry.getSize();

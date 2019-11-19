@@ -13,7 +13,7 @@ import java.util.HashSet;
 
 
 
-public class DatabaseHandler
+public class DatabaseHandlerMongo
 {
   private MongoClient mongoClient = MongoClients.create();
   private MongoDatabase database;

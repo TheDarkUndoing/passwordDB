@@ -17,7 +17,7 @@ public class Main
         String INPUT_FILE_PATH = args[0];
         String OUTPUT_FILE_PATH = "tarfile_test.tar";
         File inputFile = new File(INPUT_FILE_PATH);
-        DatabaseHandler mongodb = new DatabaseHandler("passwordDB","passwordByUser");
+        DatabaseHandlerMongo mongodb = new DatabaseHandler("passwordDB","passwordByUser");
         File tarFile = new File(OUTPUT_FILE_PATH);
         tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
 
