@@ -11,6 +11,8 @@ public class DatabaseHandlerMariaDB
   String username = null;
   Connection connection = null;
   Properties prop = null;
+  Statement st = null;
+  ResultSet res = null;
 
   public void connect()
   {

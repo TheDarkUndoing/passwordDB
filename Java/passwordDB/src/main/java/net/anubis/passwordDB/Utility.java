@@ -14,6 +14,7 @@ public class Utility
     ResultSet res = null;
     Boolean dbUserExist = false;
     Boolean dbDatabaseExist = false;
+    Boolean dbTableExist = false;
 
 
 
@@ -43,6 +44,25 @@ public class Utility
       }
       //Add DATABASE
       res = st.executeQuery("show databases");
+      while(res.next())
+      {
+        String dbDatabase = res.getString("Database");
+        if(dbDatabase.equals("passwordDB"))
+        {
+          dbDatabaseExist = true;
+          System.out.println("[SETUP-DB] Database found in database");
+        }
+
+      }
+      if(!dbUserExist)
+      {
+        System.out.println("[SETUP-DB] Database not found in database");
+        System.out.println("[SETUP-DB] adding passwordDB database...");
+        st.executeQuery("CREATE DATABASE passwordDB");
+      }
+      //Add TABLE
+      st.executeQuery("use passwordDB");
+      res = st.executeQuery("show tables");
       while(res.next())
       {
         String dbDatabase = res.getString("Database");
