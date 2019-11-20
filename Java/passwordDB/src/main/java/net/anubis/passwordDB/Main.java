@@ -23,19 +23,19 @@ public class Main
         File tarFile = new File(OUTPUT_FILE_PATH);
         tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
 
-        // TarArchiveInputStream tis = GetFile.getTarArchiveStream(tarFile);
-        // TarArchiveEntry[] tarEntryArray = GetFile.getEntries(tis);
-        // String entryName =null;
-        // int entryStartOffset = 0;
-        // for (int i = 0 ; i < tarEntryArray.length; i++)
-        // {
-        //   entryName = tarEntryArray[i].getName();
-        //   System.out.println(entryName);
-        //   entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
-        //   System.out.println(entryStartOffset);
-        //
-        //   ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
-        // }
+        TarArchiveInputStream tis = GetFile.getTarArchiveStream(tarFile);
+        TarArchiveEntry[] tarEntryArray = GetFile.getEntries(tis);
+        String entryName =null;
+        int entryStartOffset = 0;
+        for (int i = 0 ; i < tarEntryArray.length; i++)
+        {
+          entryName = tarEntryArray[i].getName();
+          System.out.println(entryName);
+          entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
+          System.out.println(entryStartOffset);
+
+          ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
+        }
 
       } catch (IOException e)
       {
