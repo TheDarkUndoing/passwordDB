@@ -27,24 +27,29 @@ public class ConfigFile
     }
     return this.config;
   }
+
   public void makeDBConfig()
   {
-    try (OutputStream output = new FileOutputStream(this.path)) {
+    try (OutputStream output = new FileOutputStream(this.path))
+    {
+      Properties prop = new Properties();
 
-            Properties prop = new Properties();
+      // set the properties value
+      prop.setProperty("db.url", "jdbc:mysql://localhost/passwordDB");
+      prop.setProperty("db.username", "passwordDB");
+      prop.setProperty("db.password", "passwordDB");
 
-            // set the properties value
-            prop.setProperty("db.url", "jdbc:mysql://localhost/passwordDB");
-            prop.setProperty("db.user", "passwordDB");
-            prop.setProperty("db.password", "password");
+      // save properties to project root folder
+      prop.store(output, null);
 
-            // save properties to project root folder
-            prop.store(output, null);
-
-            System.out.println(prop);
-
-        } catch (IOException io) {
-            io.printStackTrace();
+    } catch (IOException io)
+      {
+      io.printStackTrace();
+      }
   }
-}
+
+  public String toString()
+  {
+    return config.toString();
+  }
 }

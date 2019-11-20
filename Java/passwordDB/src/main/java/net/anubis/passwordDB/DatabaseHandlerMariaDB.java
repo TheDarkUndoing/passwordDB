@@ -12,17 +12,20 @@ public class DatabaseHandlerMariaDB
   Connection connection = null;
   Properties prop = null;
 
-  public DatabaseHandlerMariaDB()
+  public void connect()
   {
     config.makeDBConfig();
-    this.prop = config.load();
-    String url = prop.getProperty("db.url");
-    String password = prop.getProperty("db.password");
-    String username = prop.getProperty("db.username");
+    prop = config.load();
+
+    url = prop.getProperty("db.url");
+    password = prop.getProperty("db.password");
+    username = prop.getProperty("db.username");
+
+  
 
     try
     {
-      Connection connection = DriverManager.getConnection(url,username, password);
+      connection = DriverManager.getConnection(url,username, password);
     }catch (SQLException e)
     {
       e.printStackTrace();
