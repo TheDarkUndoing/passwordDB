@@ -35,7 +35,7 @@ public class ConfigFile
       Properties prop = new Properties();
 
       // set the properties value
-      prop.setProperty("db.url", "jdbc:mysql://localhost/passwordDB");
+      prop.setProperty("db.url", "jdbc:mysql://localhost/password_db");
       prop.setProperty("db.username", "passwordDB");
       prop.setProperty("db.password", "passwordDB");
 

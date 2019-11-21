@@ -18,6 +18,7 @@ public class Utility
 
 
 
+
     try
     {
       con = DriverManager.getConnection(url,user, pass);
@@ -47,39 +48,38 @@ public class Utility
       while(res.next())
       {
         String dbDatabase = res.getString("Database");
-        if(dbDatabase.equals("passwordDB"))
+        if(dbDatabase.equals("password_db"))
         {
           dbDatabaseExist = true;
           System.out.println("[SETUP-DB] Database found in database");
         }
 
       }
-      if(!dbUserExist)
+      if(!dbDatabaseExist)
       {
         System.out.println("[SETUP-DB] Database not found in database");
-        System.out.println("[SETUP-DB] adding passwordDB database...");
-        st.executeQuery("CREATE DATABASE passwordDB");
+        System.out.println("[SETUP-DB] adding password_db database...");
+        st.executeQuery("CREATE DATABASE password_db");
       }
+
       //Add TABLE
-      st.executeQuery("use passwordDB");
+      st.executeQuery("use password_db");
       res = st.executeQuery("show tables");
       while(res.next())
       {
-        String dbDatabase = res.getString("Database");
-        if(dbDatabase.equals("passwordDB"))
+        String dbTable = res.getString("Tables_in_password_db");
+        if(dbTable.equals("password_by_user"))
         {
-          dbDatabaseExist = true;
-          System.out.println("[SETUP-DB] Database found in database");
+          dbTableExist = true;
+          System.out.println("[SETUP-DB] Table found in database");
         }
-
       }
-      if(!dbUserExist)
+      if(!dbTableExist)
       {
-        System.out.println("[SETUP-DB] Database not found in database");
-        System.out.println("[SETUP-DB] adding passwordDB database...");
-        st.executeQuery("CREATE DATABASE passwordDB");
+        System.out.println("[SETUP-DB] Table not found in database");
+        System.out.println("[SETUP-DB] adding password_by_user table...");
+        st.executeQuery("CREATE TABLE password_db.password_by_user( pass_combos JSON );");
       }
-
     }catch (SQLException e)
     {
       e.printStackTrace();
