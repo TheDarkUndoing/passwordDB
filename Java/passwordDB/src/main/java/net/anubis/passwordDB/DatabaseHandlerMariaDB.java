@@ -9,7 +9,7 @@ public class DatabaseHandlerMariaDB
   String url = null;
   String password = null;
   String username = null;
-  Connection connection = null;
+  Connection con = null;
   Properties prop = null;
   Statement st = null;
   ResultSet res = null;
@@ -23,11 +23,12 @@ public class DatabaseHandlerMariaDB
     password = prop.getProperty("db.password");
     username = prop.getProperty("db.username");
 
-  
+
 
     try
     {
-      connection = DriverManager.getConnection(url,username, password);
+      con = DriverManager.getConnection(url,username, password);
+      st = con.createStatement();
     }catch (SQLException e)
     {
       e.printStackTrace();
@@ -36,6 +37,17 @@ public class DatabaseHandlerMariaDB
   }
   public void insert(String[] passCombo)
   {
+    String username = passCombo[0];
+    String password = passCombo[1];
+    try
+    {
+      res = st.executeQuery("INSERT INTO password_db (username,passwords) VALUES ("+username+","+password+")");
+    } catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+
+
 
   }
 }

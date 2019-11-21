@@ -12,9 +12,14 @@ public class Utility
     Statement st = null;
     Connection con = null;
     ResultSet res = null;
+    String dbUser = null;
+    String dbDatabase = null;
+    String dbTable = null;
+    String dbIndex = null;
     Boolean dbUserExist = false;
     Boolean dbDatabaseExist = false;
     Boolean dbTableExist = false;
+    Boolean dbIndexExist = false;
 
 
 
@@ -27,7 +32,7 @@ public class Utility
       res = st.executeQuery("select * from mysql.user");
       while(res.next())
       {
-        String dbUser = res.getString("User");
+        dbUser = res.getString("User");
         if(dbUser.equals("passwordDB"))
         {
           dbUserExist = true;
@@ -47,7 +52,7 @@ public class Utility
       res = st.executeQuery("show databases");
       while(res.next())
       {
-        String dbDatabase = res.getString("Database");
+        dbDatabase = res.getString("Database");
         if(dbDatabase.equals("password_db"))
         {
           dbDatabaseExist = true;
@@ -67,7 +72,7 @@ public class Utility
       res = st.executeQuery("show tables");
       while(res.next())
       {
-        String dbTable = res.getString("Tables_in_password_db");
+        dbTable = res.getString("Tables_in_password_db");
         if(dbTable.equals("password_by_user"))
         {
           dbTableExist = true;
@@ -78,7 +83,28 @@ public class Utility
       {
         System.out.println("[SETUP-DB] Table not found in database");
         System.out.println("[SETUP-DB] adding password_by_user table...");
-        st.executeQuery("CREATE TABLE password_db.password_by_user( pass_combos JSON );");
+        st.executeQuery("CREATE TABLE password_db.password_by_user( username varchar(255), passwords JSON );");
+      }
+      // Add Index
+      res = st.executeQuery("SHOW INDEX FROM password_db.password_by_user");
+      while(res.next())
+      {
+        dbTable = res.getString("Table");
+        dbIndex = res.getString("Key_name");
+        if(dbTable.equals("password_by_user") && dbIndex.equals("username"))
+        {
+          dbIndexExist = true;
+          System.out.println("[SETUP-DB] Index found in database");
+        }
+
+      }
+      if(!dbIndexExist)
+      {
+        System.out.println("[SETUP-DB] index not found in database");
+        System.out.println("[SETUP-DB] adding username index...");
+        st.executeQuery("CREATE INDEX username ON password_by_user (username)");
+
+
       }
     }catch (SQLException e)
     {
@@ -86,7 +112,7 @@ public class Utility
     }
 
 
-    //Add DATABASE
+
 
   }
 }
