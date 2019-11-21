@@ -41,7 +41,8 @@ public class DatabaseHandlerMariaDB
     String password = passCombo[1];
     try
     {
-      res = st.executeQuery("INSERT INTO password_db (username,passwords) VALUES ("+username+","+password+")");
+      res = st.executeQuery("Select username FROM password_db.password_by_user WHERE username ="+username);
+      if(res.getString("username").equals(username))
     } catch(SQLException e)
     {
       e.printStackTrace();
