@@ -83,7 +83,7 @@ public class Utility
       {
         System.out.println("[SETUP-DB] Table not found in database");
         System.out.println("[SETUP-DB] adding password_by_user table...");
-        st.executeQuery("CREATE TABLE password_db.password_by_user( username varchar(255), passwords JSON );");
+        st.executeQuery("CREATE TABLE password_db.password_by_user( username varchar(255), passwords LONGTEXT );");
       }
       // Add Index
       res = st.executeQuery("SHOW INDEX FROM password_db.password_by_user");
