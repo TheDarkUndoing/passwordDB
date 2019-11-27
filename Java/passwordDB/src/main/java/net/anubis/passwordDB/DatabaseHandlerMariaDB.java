@@ -39,16 +39,46 @@ public class DatabaseHandlerMariaDB
   {
     String username = passCombo[0];
     String password = passCombo[1];
+    boolean done = false;
     try
     {
-      res = st.executeQuery("Select username FROM password_db.password_by_user WHERE username ="+username);
-      if(res.getString("username").equals(username))
-    } catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
+
+      res = st.executeQuery("Select username FROM password_db.password_by_user WHERE username = \'"+username+"\'");
+      //If username exists already update passwords
+      //res.beforeFirst();
+
+      if(res.next() == false)// add new entry
+      {
+        //System.out.println(res.getString("username"));
+        st.executeQuery("INSERT INTO password_db.password_by_user (username,passwords) VALUES (\'"+username+"\',\'"+password+"\')");
+        System.out.println("NEW Username inserted");
+      }
+      else
+      {
+        System.out.println("Existing Username found");
+
+
+        res = st.executeQuery("Select passwords FROM password_db.password_by_user WHERE username = \'"+username+"\'");
+
+        //System.out.println(res.getString("passwords"));
+        res.next();
+        if(res.getString("passwords").contains(password) == false)
+        {
+          System.out.println("Updating passwordlist");
+          res = st.executeQuery("UPDATE password_db.password_by_user Set passwords = \'"+res.getString("passwords")+","+password+"\' WHERE username = \'"+username+"\'");
+        }
+        else{System.out.println("Password already in row ");}
+      }
+      System.out.println("[LOG]Reached end of insert");
+      } catch(SQLException e)
+      {
+        e.printStackTrace();
+      }
+
+      }
+
+
 
 
 
   }
-}
