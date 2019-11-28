@@ -40,6 +40,7 @@ public class DatabaseHandlerMariaDB
     String username = passCombo[0];
     String password = passCombo[1];
     boolean done = false;
+    String passwordList = null;
     try
     {
 
@@ -56,16 +57,14 @@ public class DatabaseHandlerMariaDB
       else
       {
         System.out.println("Existing Username found");
-
-
         res = st.executeQuery("Select passwords FROM password_db.password_by_user WHERE username = \'"+username+"\'");
 
-        //System.out.println(res.getString("passwords"));
         res.next();
-        if(res.getString("passwords").contains(password) == false)
+        passwordList = res.getString("passwords");
+        if(passwordList.contains(password) == false)
         {
           System.out.println("Updating passwordlist");
-          res = st.executeQuery("UPDATE password_db.password_by_user Set passwords = \'"+res.getString("passwords")+","+password+"\' WHERE username = \'"+username+"\'");
+          res = st.executeQuery("UPDATE password_db.password_by_user Set passwords = \'"+passwordList+","+password+"\' WHERE username = \'"+username+"\'");
         }
         else{System.out.println("Password already in row ");}
       }
