@@ -1,4 +1,4 @@
-Database Schema
+Database Schema Mongo
 {
 "user":"username or email"
 "pass":["pass","word"]

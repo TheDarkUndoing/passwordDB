@@ -1,4 +1,4 @@
-# passwordDB
+# passwordDB MariaDB Implementation
 Currently a database builder for the Collection password leak.
 Eventually going to be a full web application.
 
@@ -9,7 +9,7 @@ Eventually going to be a full web application.
 
 
 ## Prerequisite
-- [MongoDB 3.8+](https://www.mongodb.com/download-center/community)
+- [MariaDB 10.4+](https://downloads.mariadb.org/)
 
 ## Running a release version
 Download passwordDB.jar and testData.tar.gz from releases tab.

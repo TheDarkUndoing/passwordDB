@@ -24,7 +24,7 @@ public class DatabaseHandlerMongo
 
 
 
-  public DatabaseHandler(String database,String collection)
+  public DatabaseHandlerMongo(String database,String collection)
   {
     this.database = mongoClient.getDatabase(database);
     this.collection = this.database.getCollection(collection);
