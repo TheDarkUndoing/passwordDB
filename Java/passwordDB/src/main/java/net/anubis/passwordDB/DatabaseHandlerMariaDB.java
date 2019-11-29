@@ -23,8 +23,6 @@ public class DatabaseHandlerMariaDB
     password = prop.getProperty("db.password");
     username = prop.getProperty("db.username");
 
-
-
     try
     {
       con = DriverManager.getConnection(url,username, password);
