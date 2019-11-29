@@ -115,4 +115,14 @@ public class Utility
 
 
   }
+
+  public String[] getState()
+  {
+    String[] state = new String[3];
+    return state;
+  }
+  public void setState()
+  {
+    ;
+  }
 }

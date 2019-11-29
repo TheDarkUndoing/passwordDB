@@ -21,16 +21,37 @@ public class ConfigFile
     {
       //Properties config = new Properties();
       this.config.load(input);
+      input.close();
     } catch (IOException ex)
     {
       ex.printStackTrace();
     }
     return this.config;
   }
-
-  public void makeDBConfig()
+  public void setPath(String newPath)
   {
-    try (OutputStream output = new FileOutputStream(this.path))
+    path = newPath;
+  }
+  public void setValue(String key, String value)
+  {
+    load();
+    config.setProperty(key,value);
+    store();
+  }
+  public void store()
+  {
+    try (OutputStream output = new FileOutputStream(path))
+    {
+      config.store(output, null);
+      output.close();
+    } catch (IOException io)
+      {
+      io.printStackTrace();
+      }
+  }
+  public static void makeDBConfig(String path)
+  {
+    try (OutputStream output = new FileOutputStream(path))
     {
       Properties prop = new Properties();
 
@@ -41,6 +62,7 @@ public class ConfigFile
 
       // save properties to project root folder
       prop.store(output, null);
+      output.close();
 
     } catch (IOException io)
       {

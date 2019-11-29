@@ -16,7 +16,7 @@ public class DatabaseHandlerMariaDB
 
   public void connect()
   {
-    config.makeDBConfig();
+    ConfigFile.makeDBConfig("database.properties");
     prop = config.load();
 
     url = prop.getProperty("db.url");
