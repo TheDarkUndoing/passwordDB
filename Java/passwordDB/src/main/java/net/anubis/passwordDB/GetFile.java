@@ -12,7 +12,10 @@ import org.apache.commons.compress.utils.IOUtils;
 
 public class GetFile
 {
-  public File deCompressGZipFile(File gZippedFile, File tarFile) throws IOException{
+  public static File deCompressGZipFile(File gZippedFile, File tarFile)
+  {
+    try
+    {
       FileInputStream fis = new FileInputStream(gZippedFile);
       GZIPInputStream gZIPInputStream = new GZIPInputStream(fis);
 
@@ -25,47 +28,59 @@ public class GetFile
 
       fos.close();
       gZIPInputStream.close();
-      return tarFile;
 
+    }catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    return tarFile;
   }
-  public TarArchiveInputStream getTarArchiveStream(File tarFile)throws IOException
+
+  public static TarArchiveInputStream getTarArchiveStream(File tarFile)
   {
-    FileInputStream fis = new FileInputStream(tarFile);
-    TarArchiveInputStream tis = new TarArchiveInputStream(fis);
-    // TarArchiveEntry currentEntry = null;
-    // tis.getNextTarEntry();
-    // while ((currentEntry = tis.getCurrentEntry()) != null)
-    // {
-    //   System.out.println(currentEntry.getName());
-    //   tis.getNextTarEntry();
-    // }
+    FileInputStream fis = null;
+    TarArchiveInputStream tis = null;
+    try
+    {
+      fis = new FileInputStream(tarFile);
+      tis = new TarArchiveInputStream(fis);
+      return tis;
+
+    }catch (IOException e)
+    {
+      e.printStackTrace();
+    }
     return tis;
   }
 
-  public TarArchiveEntry[] getEntries(TarArchiveInputStream tis) throws IOException
+  public static  TarArchiveEntry[] getEntries(TarArchiveInputStream tis)
   {
     ArrayList<TarArchiveEntry> tarEntryArray = new ArrayList<TarArchiveEntry>();
     TarArchiveInputStream currentStream = tis;
     TarArchiveEntry currentEntry = null;
-    currentStream.getNextTarEntry();
-    while ((currentEntry = currentStream.getCurrentEntry()) != null)
+    TarArchiveEntry[] tarEntryArray_final = null;
+    try
     {
 
-      tarEntryArray.add(currentEntry);
       currentStream.getNextTarEntry();
+      while ((currentEntry = currentStream.getCurrentEntry()) != null)
+      {
+        tarEntryArray.add(currentEntry);
+        currentStream.getNextTarEntry();
+      }
+      currentStream.close();
+
+      tarEntryArray_final = new TarArchiveEntry[tarEntryArray.size()];
+      for (int counter = 0; counter < tarEntryArray.size(); counter++)
+      {
+        	tarEntryArray_final[counter] = tarEntryArray.get(counter);
+      }
+      return (TarArchiveEntry[])tarEntryArray_final;
+      }catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+      return (TarArchiveEntry[])tarEntryArray_final;
     }
-    currentStream.close();
-
-    TarArchiveEntry[] tarEntryArray_final = new TarArchiveEntry[tarEntryArray.size()];
-    for (int counter = 0; counter < tarEntryArray.size(); counter++)
-    {
-      	tarEntryArray_final[counter] = tarEntryArray.get(counter);
-    }
-    return (TarArchiveEntry[])tarEntryArray_final;
-    }
-
-  // public
-
-
 
   }

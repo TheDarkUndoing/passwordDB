@@ -17,53 +17,59 @@ public class ParseFile
   TODO increase effeciency of findTar
   entry so that it doesnt parse entire file every time
   */
-    public static int findTarEntry(File tarfile, String entryName)throws IOException
+    public static int findTarEntry(File tarfile, String entryName)
       {
-      FileInputStream fis = new FileInputStream(tarfile);
+      FileInputStream fis;
       byte[] readArea;
       byte[] entryNameBytes;
       int namelength = entryName.length();
-
-
-      if (namelength % 2 == 0)
-      {
-        readArea = new byte[namelength];
-        entryNameBytes = entryName.getBytes();
-      }
-      else
-      {
-        entryName = entryName.substring(0, entryName.length() -1);
-        namelength = entryName.length();
-
-        readArea = new byte[namelength];
-        entryNameBytes = entryName.getBytes();
-      }
-
-      String readAreaString = "";
-      //String entryNameBytesString = Arrays.toString(entryNameBytes);
-      String entryNameBytesString = new String(entryNameBytes, StandardCharsets.UTF_8);
       int offset = 0;
 
-
-      while(!Arrays.equals(readArea,entryNameBytes))
+      try
       {
-        offset += fis.read(readArea);
-        readAreaString = new String(readArea , StandardCharsets.UTF_8);
+        fis = new FileInputStream(tarfile);
+        if (namelength % 2 == 0)
+        {
+          readArea = new byte[namelength];
+          entryNameBytes = entryName.getBytes();
+        }
+        else
+        {
+          entryName = entryName.substring(0, entryName.length() -1);
+          namelength = entryName.length();
 
-        //readAreaString = Arrays.toString(readArea);
-      //  System.out.println(entryName+" "+ readAreaString);
-      //  System.out.println("readArea\t"+readAreaString);
-        //System.out.println("entryNameBytes\t"+entryNameBytesString);
+          readArea = new byte[namelength];
+          entryNameBytes = entryName.getBytes();
+        }
 
+        String readAreaString = "";
+        //String entryNameBytesString = Arrays.toString(entryNameBytes);
+        String entryNameBytesString = new String(entryNameBytes, StandardCharsets.UTF_8);
+
+
+
+        while(!Arrays.equals(readArea,entryNameBytes))
+        {
+          offset += fis.read(readArea);
+          readAreaString = new String(readArea , StandardCharsets.UTF_8);
+
+
+
+        }
+        //To move back to the beginning of the entry
+        offset -= namelength;
+
+        return offset;
+      }catch (IOException e)
+      {
+        e.printStackTrace();
       }
-      //To move back to the beginning of the entry
-      offset -= namelength;
-
       return offset;
+
     }
-    public static void readTarEntry(File tarFile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandlerMongo mongodb) throws IOException
+    public static void readTarEntry(File tarfile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandlerMongo mongodb)
       {
-        FileInputStream fis = new FileInputStream(tarFile);
+        FileInputStream fis;
         long entrySize = tarEntry.getSize();
         long bytesRead = 0;
         String string = null;
@@ -71,67 +77,76 @@ public class ParseFile
         String[] passCombo = null;
         int lineCount = 0;
 
+
+
       //  byte[] readbuffer = new byte[1024];
         ArrayList<Byte> readBuffer = new ArrayList<Byte>();
         //Skips to beginning of entryand then jumps 512 bytes to start of entry's data
         //TAR Entries are 512 byte entries
-        fis.skip(entryStartOffset+512);
-
-
-        byte curByte = 0;
-        while(bytesRead < entrySize )
+        try
         {
+          fis = new FileInputStream(tarfile);
+          fis.skip(entryStartOffset+512);
 
-          curByte = (byte)fis.read();
-          bytesRead++;
 
-          if (curByte != 10 && curByte != 13 )
+          byte curByte = 0;
+          while(bytesRead < entrySize )
           {
-            while(curByte != 10 && curByte != 13)
+
+            curByte = (byte)fis.read();
+            bytesRead++;
+
+            if (curByte != 10 && curByte != 13 )
             {
-              readBuffer.add(curByte);
-              curByte = (byte)fis.read();
-              bytesRead++;
-            }
-
-            line = byteListToArray(readBuffer);
-            readBuffer.clear();
-
-
-
-            string = new String(line , StandardCharsets.UTF_8);
-            System.out.println(lineCount);
-            lineCount++;
-            //System.out.println(Arrays.toString(line));
-            //System.out.println(string);
-            if (string.contains(";"))
-            {
-              long startLine = System.currentTimeMillis();
-              passCombo = string.split(";");
-              if(passCombo.length == 2)
+              while(curByte != 10 && curByte != 13)
               {
-                mongodb.insert(passCombo);
+                readBuffer.add(curByte);
+                curByte = (byte)fis.read();
+                bytesRead++;
               }
-              long endLine = System.currentTimeMillis();
-              System.out.println((endLine-startLine) +"ms insert");
-            }
-            else if(string.contains(":"))
-            {
-              long startLine = System.currentTimeMillis();
-              passCombo = string.split(":");
-              if(passCombo.length == 2)
+
+              line = byteListToArray(readBuffer);
+              readBuffer.clear();
+
+
+
+              string = new String(line , StandardCharsets.UTF_8);
+              System.out.println(lineCount);
+              lineCount++;
+              //System.out.println(Arrays.toString(line));
+              //System.out.println(string);
+              if (string.contains(";"))
               {
-                mongodb.insert(passCombo);
+                long startLine = System.currentTimeMillis();
+                passCombo = string.split(";");
+                if(passCombo.length == 2)
+                {
+                  mongodb.insert(passCombo);
+                }
+                long endLine = System.currentTimeMillis();
+                System.out.println((endLine-startLine) +"ms insert");
               }
-              long endLine = System.currentTimeMillis();
-              System.out.println((endLine-startLine) +"ms insert");
+              else if(string.contains(":"))
+              {
+                long startLine = System.currentTimeMillis();
+                passCombo = string.split(":");
+                if(passCombo.length == 2)
+                {
+                  mongodb.insert(passCombo);
+                }
+                long endLine = System.currentTimeMillis();
+                System.out.println((endLine-startLine) +"ms insert");
+              }
             }
           }
+        }catch (IOException e)
+        {
+          e.printStackTrace();
         }
       }
-    public static void readTarEntry(File tarFile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandlerMariaDB mariadb) throws IOException
+    public static void readTarEntry(File tarfile, int entryStartOffset, TarArchiveEntry tarEntry, DatabaseHandlerMariaDB mariadb)
       {
-        FileInputStream fis = new FileInputStream(tarFile);
+        FileInputStream fis;
         long entrySize = tarEntry.getSize();
         long bytesRead = 0;
         String string = null;
@@ -143,61 +158,68 @@ public class ParseFile
         ArrayList<Byte> readBuffer = new ArrayList<Byte>();
         //Skips to beginning of entryand then jumps 512 bytes to start of entry's data
         //TAR Entries are 512 byte entries
-        fis.skip(entryStartOffset+512);
-
-
-        byte curByte = 0;
-        while(bytesRead < entrySize )
+        try
         {
+          fis = new FileInputStream(tarfile);
+          fis.skip(entryStartOffset+512);
 
-          curByte = (byte)fis.read();
-          bytesRead++;
 
-          if (curByte != 10 && curByte != 13 )
+          byte curByte = 0;
+          while(bytesRead < entrySize )
           {
-            while(curByte != 10 && curByte != 13)
+
+            curByte = (byte)fis.read();
+            bytesRead++;
+
+            if (curByte != 10 && curByte != 13 )
             {
-              readBuffer.add(curByte);
-              curByte = (byte)fis.read();
-              bytesRead++;
-            }
-
-            line = byteListToArray(readBuffer);
-            readBuffer.clear();
-
-
-
-            string = new String(line , StandardCharsets.UTF_8);
-            System.out.println(lineCount);
-            lineCount++;
-            //System.out.println(Arrays.toString(line));
-            //System.out.println(string);
-            if (string.contains(";"))
-            {
-              long startLine = System.currentTimeMillis();
-              passCombo = string.split(";");
-              if(passCombo.length == 2)
+              while(curByte != 10 && curByte != 13)
               {
-                mariadb.insert(passCombo);
-              }
-              long endLine = System.currentTimeMillis();
-              System.out.println((endLine-startLine) +"ms insert");
-            }
-            else if(string.contains(":"))
-            {
-
-
-              long startLine = System.currentTimeMillis();
-              passCombo = string.split(":");
-              if(passCombo.length == 2)
-              {
-                mariadb.insert(passCombo);
+                readBuffer.add(curByte);
+                curByte = (byte)fis.read();
+                bytesRead++;
               }
 
-              long endLine = System.currentTimeMillis();
-              System.out.println((endLine-startLine) +"ms insert");
+              line = byteListToArray(readBuffer);
+              readBuffer.clear();
+
+
+
+              string = new String(line , StandardCharsets.UTF_8);
+              System.out.println(lineCount);
+              lineCount++;
+              //System.out.println(Arrays.toString(line));
+              //System.out.println(string);
+              if (string.contains(";"))
+              {
+                long startLine = System.currentTimeMillis();
+                passCombo = string.split(";");
+                if(passCombo.length == 2)
+                {
+                  mariadb.insert(passCombo);
+                }
+                long endLine = System.currentTimeMillis();
+                System.out.println((endLine-startLine) +"ms insert");
+              }
+              else if(string.contains(":"))
+              {
+
+
+                long startLine = System.currentTimeMillis();
+                passCombo = string.split(":");
+                if(passCombo.length == 2)
+                {
+                  mariadb.insert(passCombo);
+                }
+
+                long endLine = System.currentTimeMillis();
+                System.out.println((endLine-startLine) +"ms insert");
+              }
             }
           }
+        }catch (IOException e)
+        {
+          e.printStackTrace();
         }
       }
     private static byte[] byteListToArray(ArrayList<Byte> arrayList)
