@@ -1,7 +1,7 @@
 package net.anubis.passwordDB;
 import java.io.File;
-import java.util.Arrays;
-import java.io.IOException;
+
+
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;

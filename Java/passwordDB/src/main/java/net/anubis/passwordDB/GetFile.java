@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.utils.IOUtils;
+
 
 public class GetFile
 {

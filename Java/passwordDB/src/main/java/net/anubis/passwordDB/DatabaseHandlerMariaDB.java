@@ -37,7 +37,7 @@ public class DatabaseHandlerMariaDB
   {
     String username = passCombo[0];
     String password = passCombo[1];
-    boolean done = false;
+    //boolean done = false;
     String passwordList = null;
     try
     {
