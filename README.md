@@ -33,3 +33,16 @@ $ java -jar passwordDB.jar testData.tar.gz
 ```
 
 If there are any features you would like or issues you have please open a [ticket](https://github.com/TheDarkUndoing/passwordDB/issues/).
+
+## Deploying Project with WEB Database
+Use web argument -w
+```
+$ java -jar passwordDB.jar testData.tar.gz -w
+```
+create properties file called database_web.properties with contents:
+```
+db.url=jdbc\:mysql\://host/database
+db.password=password
+db.username=username
+db.db=database
+```
