@@ -59,6 +59,7 @@ public class ConfigFile
       prop.setProperty("db.url", "jdbc:mysql://localhost/password_db");
       prop.setProperty("db.username", "passwordDB");
       prop.setProperty("db.password", "passwordDB");
+      prop.setProperty("db.db", "password_db");
 
       // save properties to project root folder
       prop.store(output, null);

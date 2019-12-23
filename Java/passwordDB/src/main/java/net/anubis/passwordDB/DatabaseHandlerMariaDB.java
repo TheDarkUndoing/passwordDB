@@ -4,24 +4,27 @@ import java.util.Properties;
 
 public class DatabaseHandlerMariaDB
 {
-  ConfigFile config = new ConfigFile("database.properties");
+  ConfigFile config; 
 
   String url = null;
   String password = null;
   String username = null;
+  String database = null;
   Connection con = null;
   Properties prop = null;
   Statement st = null;
   ResultSet res = null;
 
-  public void connect()
+  public void connect(String configPath)
   {
-    ConfigFile.makeDBConfig("database.properties");
+    
+    config = new ConfigFile(configPath);
     prop = config.load();
 
     url = prop.getProperty("db.url");
     password = prop.getProperty("db.password");
     username = prop.getProperty("db.username");
+    database = prop.getProperty("db.db");
 
     try
     {
@@ -42,27 +45,27 @@ public class DatabaseHandlerMariaDB
     try
     {
 
-      res = st.executeQuery("Select username FROM password_db.password_by_user WHERE username = \'"+username+"\'");
+      res = st.executeQuery("Select username FROM "+database+".password_by_user WHERE username = \'"+username+"\'");
       //If username exists already update passwords
       //res.beforeFirst();
 
       if(res.next() == false)// add new entry
       {
         //System.out.println(res.getString("username"));
-        st.executeQuery("INSERT INTO password_db.password_by_user (username,passwords) VALUES (\'"+username+"\',\'"+password+"\')");
+        st.executeQuery("INSERT INTO "+database+".password_by_user (username,passwords) VALUES (\'"+username+"\',\'"+password+"\')");
         System.out.println("NEW Username inserted");
       }
       else
       {
         System.out.println("Existing Username found");
-        res = st.executeQuery("Select passwords FROM password_db.password_by_user WHERE username = \'"+username+"\'");
+        res = st.executeQuery("Select passwords FROM "+database+".password_by_user WHERE username = \'"+username+"\'");
 
         res.next();
         passwordList = res.getString("passwords");
         if(passwordList.contains(password) == false)
         {
           System.out.println("Updating passwordlist");
-          res = st.executeQuery("UPDATE password_db.password_by_user Set passwords = \'"+passwordList+","+password+"\' WHERE username = \'"+username+"\'");
+          res = st.executeQuery("UPDATE "+database+".password_by_user Set passwords = \'"+passwordList+","+password+"\' WHERE username = \'"+username+"\'");
         }
         else{System.out.println("Password already in row ");}
       }

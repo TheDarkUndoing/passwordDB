@@ -1,5 +1,6 @@
 package net.anubis.passwordDB;
 import java.io.File;
+import java.util.Arrays;
 
 
 
@@ -12,11 +13,22 @@ public class Main
   static String OUTPUT_FILE_PATH;
   public static void main(String[] args)
   {
-
+    System.out.println(Arrays.toString(args));
     INPUT_FILE_PATH = args[0];
     OUTPUT_FILE_PATH = "tarfile_test.tar";
     File inputFile = new File(INPUT_FILE_PATH);
-    DatabaseHandlerMariaDB mariadb = configureDatabase();
+    DatabaseHandlerMariaDB mariadb;
+    if(args[1].equals("-w"))
+    {
+       mariadb = configureWebDatabase();
+      System.out.println("[MODE] Web mode engaged");
+
+    }
+    else
+    {
+      mariadb = configureDatabase();
+    }
+    
 
 
     File tarFile = new File(OUTPUT_FILE_PATH);
@@ -40,7 +52,14 @@ public class Main
   {
     Utility.setupDB();
     DatabaseHandlerMariaDB mariadb = new DatabaseHandlerMariaDB();
-    mariadb.connect();
+    mariadb.connect("database.properties");
+    return mariadb;
+  }
+  public static DatabaseHandlerMariaDB configureWebDatabase()
+  {
+    Utility.setupDB_Web();
+    DatabaseHandlerMariaDB mariadb = new DatabaseHandlerMariaDB();
+    mariadb.connect("database_web.properties");
     return mariadb;
   }
 }

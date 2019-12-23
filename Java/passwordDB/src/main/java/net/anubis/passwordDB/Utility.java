@@ -1,11 +1,13 @@
 package net.anubis.passwordDB;
 
 import java.sql.*;
+import java.util.Properties;
 
 public class Utility
 {
   public static void setupDB()
   {
+    ConfigFile.makeDBConfig("database.properties");
     String url = "jdbc:mysql://localhost/";
     String user = "root";
     String pass = "password";
@@ -116,6 +118,91 @@ public class Utility
 
   }
 
+  public static void setupDB_Web()
+  {
+    ConfigFile config = new ConfigFile("database_web.properties");
+    Properties prop;
+    prop = config.load();
+
+    
+    
+    
+    String url = null;
+    String user = null;
+    String pass = null;
+    String db = null;
+    Statement st = null;
+    Connection con = null;
+    ResultSet res = null;
+    
+    String dbTable = null;
+    String dbIndex = null;
+  
+    Boolean dbTableExist = false;
+    Boolean dbIndexExist = false;
+
+    url = prop.getProperty("db.url");
+    pass = prop.getProperty("db.password");
+    user = prop.getProperty("db.username");
+    db = prop.getProperty("db.db");
+
+
+
+
+    try
+    {
+      con = DriverManager.getConnection(url,user, pass);
+      st = con.createStatement();
+      
+
+      //Add TABLE
+      st.executeQuery("use "+ db);
+      res = st.executeQuery("show tables");
+      while(res.next())
+      {
+        dbTable = res.getString("Tables_in_"+db);
+        if(dbTable.equals("password_by_user"))
+        {
+          dbTableExist = true;
+          System.out.println("[SETUP-DB] Table found in database");
+        }
+      }
+      if(!dbTableExist)
+      {
+        System.out.println("[SETUP-DB] Table not found in database");
+        System.out.println("[SETUP-DB] adding password_by_user table...");
+        st.executeQuery("CREATE TABLE "+db+".password_by_user( username varchar(255), passwords LONGTEXT );");
+      }
+      // Add Index
+      res = st.executeQuery("SHOW INDEX FROM "+db+".password_by_user");
+      while(res.next())
+      {
+        dbTable = res.getString("Table");
+        dbIndex = res.getString("Key_name");
+        if(dbTable.equals("password_by_user") && dbIndex.equals("username"))
+        {
+          dbIndexExist = true;
+          System.out.println("[SETUP-DB] Index found in database");
+        }
+
+      }
+      if(!dbIndexExist)
+      {
+        System.out.println("[SETUP-DB] index not found in database");
+        System.out.println("[SETUP-DB] adding username index...");
+        st.executeQuery("CREATE INDEX username ON password_by_user (username)");
+
+
+      }
+    }catch (SQLException e)
+    {
+      e.printStackTrace();
+    }
+
+
+
+
+  }
   public String[] getState()
   {
     String[] state = new String[3];
