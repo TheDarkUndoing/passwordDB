@@ -1,47 +1,65 @@
 package net.anubis.passwordDB;
 import java.io.File;
 import java.util.Arrays;
-import java.io.IOException;
+
+
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
 public class Main
 {
+  static String INPUT_FILE_PATH;
+  static String OUTPUT_FILE_PATH;
   public static void main(String[] args)
   {
-    try{
-      GetFile GetFile = new GetFile();
-        //String INPUT_FILE_PATH = "/media/user/DATA/FrostWire/Torrent
-        //Data/Collection 1/Collection  #1_BTC combos.tar.gz";
-        String INPUT_FILE_PATH = args[0];
-        String OUTPUT_FILE_PATH = "tarfile_test.tar";
-        File inputFile = new File(INPUT_FILE_PATH);
-        Utility.setupDB();
-        DatabaseHandlerMariaDB mariadb = new DatabaseHandlerMariaDB();
-        mariadb.connect();
-        File tarFile = new File(OUTPUT_FILE_PATH);
-        tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
+    System.out.println(Arrays.toString(args));
+    INPUT_FILE_PATH = args[0];
+    OUTPUT_FILE_PATH = "tarfile_test.tar";
+    File inputFile = new File(INPUT_FILE_PATH);
+    DatabaseHandlerMariaDB mariadb;
+    if(args[1].equals("-w"))
+    {
+       mariadb = configureWebDatabase();
+      System.out.println("[MODE] Web mode engaged");
 
-        TarArchiveInputStream tis = GetFile.getTarArchiveStream(tarFile);
-        TarArchiveEntry[] tarEntryArray = GetFile.getEntries(tis);
-        String entryName =null;
-        int entryStartOffset = 0;
-        for (int i = 0 ; i < tarEntryArray.length; i++)
-        {
-          entryName = tarEntryArray[i].getName();
-          System.out.println(entryName);
-          entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
-          System.out.println(entryStartOffset);
+    }
+    else
+    {
+      mariadb = configureDatabase();
+    }
+    
 
-          ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
-        }
 
-      } catch (IOException e)
-      {
-        e.printStackTrace();
-      }
+    File tarFile = new File(OUTPUT_FILE_PATH);
+    tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
 
-    //System.out.println(Arrays.toString(args));
+    TarArchiveInputStream tis = GetFile.getTarArchiveStream(tarFile);
+    TarArchiveEntry[] tarEntryArray = GetFile.getEntries(tis);
+    String entryName =null;
+    int entryStartOffset = 0;
+    for (int i = 0 ; i < tarEntryArray.length; i++)
+    {
+      entryName = tarEntryArray[i].getName();
+      System.out.println(entryName);
+      entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
+      System.out.println(entryStartOffset);
+
+      ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
+    }
+  }
+  public static DatabaseHandlerMariaDB configureDatabase()
+  {
+    Utility.setupDB();
+    DatabaseHandlerMariaDB mariadb = new DatabaseHandlerMariaDB();
+    mariadb.connect("database.properties");
+    return mariadb;
+  }
+  public static DatabaseHandlerMariaDB configureWebDatabase()
+  {
+    Utility.setupDB_Web();
+    DatabaseHandlerMariaDB mariadb = new DatabaseHandlerMariaDB();
+    mariadb.connect("database_web.properties");
+    return mariadb;
   }
 }

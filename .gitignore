@@ -1,3 +1,8 @@
 /Java/passwordDB/.gradle/
 /Java/passwordDB/build/
+/Java/passwordDB/build/libs
 **.jar
+.classpath
+.project
+/Java/passwordDB/.settings
+/Java/passwordDB/bin
