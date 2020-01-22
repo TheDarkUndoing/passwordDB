@@ -23,7 +23,10 @@ public class Main
   public static void main(final String[] args)
   {
     List<String> argsList = Arrays.asList(args);
-
+    if(argsList.contains("-h"))
+    {
+      System.out.println("-w to Engage web mode\n-o to specify input file");
+    }
     if(argsList.contains("-w"))
     {
        mariadb = configureWebDatabase();
@@ -34,34 +37,62 @@ public class Main
     {
       mariadb = configureDatabase();
     }
+    //Handles incoming file
     if(argsList.contains("-o"))
     {
       INPUT_FILE_PATH = args[argsList.indexOf("-o") + 1];
       OUTPUT_FILE_PATH = INPUT_FILE_PATH.substring(0,INPUT_FILE_PATH.length() - 3);
+      handleFile(INPUT_FILE_PATH,OUTPUT_FILE_PATH);
 
-      inputFile = new File(INPUT_FILE_PATH);
 
-      tarFile = new File(OUTPUT_FILE_PATH);
-
-      tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
-
-      tis = GetFile.getTarArchiveStream(tarFile);
-      tarEntryArray = GetFile.getEntries(tis);
-      entryStartOffset = 0;
-      for (int i = 0 ; i < tarEntryArray.length; i++)
+    }
+    //recursive directory grabbing -r DIR path
+    else if(argsList.contains("-r"))
+    {
+        INPUT_FILE_PATH = args[argsList.indexOf("-r") + 1];
+        OUTPUT_FILE_PATH = "temp.tar";
+        System.out.println(INPUT_FILE_PATH);
+        File folder = new File(INPUT_FILE_PATH);
+        File[] files = folder.listFiles();
+        System.out.println(files[2]);
+        for (File file : files)
       {
-        entryName = tarEntryArray[i].getName();
-        System.out.println(entryName);
-        entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
-        System.out.println(entryStartOffset);
-
-        ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
+          String fileName = INPUT_FILE_PATH+file.getName();
+          System.out.println(fileName);
+          handleFile(fileName,OUTPUT_FILE_PATH);
       }
 
     }
+    else
+    {
+      System.out.println("need switch -o for input file");
+    }
 
 
+  }
+  public static void handleFile(String inputPath, String outputPath)
+  {
+    INPUT_FILE_PATH = inputPath;
+    OUTPUT_FILE_PATH = outputPath;
 
+    inputFile = new File(INPUT_FILE_PATH);
+
+    tarFile = new File(OUTPUT_FILE_PATH);
+
+    tarFile = GetFile.deCompressGZipFile(inputFile,tarFile);
+
+    tis = GetFile.getTarArchiveStream(tarFile);
+    tarEntryArray = GetFile.getEntries(tis);
+    entryStartOffset = 0;
+    for (int i = 0 ; i < tarEntryArray.length; i++)
+    {
+      entryName = tarEntryArray[i].getName();
+      System.out.println(entryName);
+      entryStartOffset = ParseFile.findTarEntry(tarFile,entryName);
+      System.out.println(entryStartOffset);
+
+      ParseFile.readTarEntry(tarFile,entryStartOffset,tarEntryArray[i],mariadb);
+    }
   }
   public static DatabaseHandlerMariaDB configureDatabase()
   {
