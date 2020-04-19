@@ -2,6 +2,8 @@ package net.anubis.passwordDB;
 
 import java.sql.*;
 import java.util.Properties;
+import java.io.File;
+import java.io.FileWriter;
 
 public class Utility
 {
@@ -124,9 +126,9 @@ public class Utility
     Properties prop;
     prop = config.load();
 
-    
-    
-    
+
+
+
     String url = null;
     String user = null;
     String pass = null;
@@ -134,10 +136,10 @@ public class Utility
     Statement st = null;
     Connection con = null;
     ResultSet res = null;
-    
+
     String dbTable = null;
     String dbIndex = null;
-  
+
     Boolean dbTableExist = false;
     Boolean dbIndexExist = false;
 
@@ -153,7 +155,7 @@ public class Utility
     {
       con = DriverManager.getConnection(url,user, pass);
       st = con.createStatement();
-      
+
 
       //Add TABLE
       st.executeQuery("use "+ db);
@@ -203,13 +205,20 @@ public class Utility
 
 
   }
-  public String[] getState()
+  public static String[] getState()
   {
     String[] state = new String[3];
     return state;
   }
-  public void setState()
+  public static void setState(tarfile,file,line)
   {
-    ;
+    File tmpFile = File("state.tmp")
+    FileWriter tmpFileWriter = FileWriter​(tmpFile);
+    if(!tmpFile.exists())
+    {
+      tmpFile.createNewFile()
+      tmpFileWriter.write
+    }
+
   }
 }
