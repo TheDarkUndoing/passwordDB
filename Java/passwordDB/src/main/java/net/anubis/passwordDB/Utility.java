@@ -4,7 +4,9 @@ import java.sql.*;
 import java.util.Properties;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Utility
 {
@@ -208,8 +210,19 @@ public class Utility
   }
   public static String[] getState()
   {
-    String[] state = new String[3];
-    return state;
+    String[] state = new String[0];
+    char[] charbuf = new char[0];
+    try {
+
+      File tmpFile = new File("state.tmp");
+      FileReader tmpFileReader = new FileReader(tmpFile);
+      tmpFileReader.read(charbuf);
+      String strbuf = String.valueOf(charbuf);
+       state = strbuf.split("\n");
+    } catch(IOException e){}
+      System.out.println(Arrays.toString(state));
+      return state;
+
   }
   public static void setState(String tarfile,String file,String line)
   {
@@ -225,9 +238,7 @@ public class Utility
         tmpFileWriter.flush();
         //System.out.println(tarfile+"\n"+file+"\n"+line);
       }
-    } catch(IOException e) {
-
-    }
+    } catch(IOException e) {}
 
 
   }

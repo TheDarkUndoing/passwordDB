@@ -22,6 +22,8 @@ public class Main
 
   public static void main(final String[] args)
   {
+    Utility.getState();
+    //System.out.println("STATE GOTTEN:\n"+Arrays.toString(Utility.getState()));
     List<String> argsList = Arrays.asList(args);
     if(argsList.contains("-h"))
     {
