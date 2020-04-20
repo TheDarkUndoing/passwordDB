@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class Utility
 {
@@ -210,15 +211,24 @@ public class Utility
     String[] state = new String[3];
     return state;
   }
-  public static void setState(tarfile,file,line)
+  public static void setState(String tarfile,String file,String line)
   {
-    File tmpFile = File("state.tmp")
-    FileWriter tmpFileWriter = FileWriter​(tmpFile);
-    if(!tmpFile.exists())
-    {
-      tmpFile.createNewFile()
-      tmpFileWriter.write
+    try {
+      File tmpFile = new File("state.tmp");
+      FileWriter tmpFileWriter = new FileWriter(tmpFile);
+      if(!tmpFile.exists())
+      {
+        tmpFile.createNewFile();
+
+      }else {
+        tmpFileWriter.write(tarfile+"\n"+file+"\n"+line);
+        tmpFileWriter.flush();
+        //System.out.println(tarfile+"\n"+file+"\n"+line);
+      }
+    } catch(IOException e) {
+
     }
+
 
   }
 }

@@ -39,7 +39,7 @@ public class ParseFile
 
       String readAreaString;
       // String entryNameBytesString = Arrays.toString(entryNameBytes);
-      
+
 
       while (!Arrays.equals(readArea, entryNameBytes)) {
         offset += fis.read(readArea);
@@ -120,8 +120,10 @@ public class ParseFile
     }
   }
 
-  public static void readTarEntry(final File tarfile, final int entryStartOffset, final TarArchiveEntry tarEntry,
-      final DatabaseHandlerMariaDB mariadb) {
+  public static void readTarEntry(final File tarfile, final int entryStartOffset, final TarArchiveEntry tarEntry,final DatabaseHandlerMariaDB mariadb) {
+    String fileName = tarfile.getName();
+    String entryName = tarEntry.getName();
+
     FileInputStream fis;
     final long entrySize = tarEntry.getSize();
     long bytesRead = 0;
@@ -156,7 +158,6 @@ public class ParseFile
 
           string = new String(line, StandardCharsets.UTF_8);
           System.out.println(lineCount);
-          lineCount++;
           // System.out.println(Arrays.toString(line));
           // System.out.println(string);
           if (string.contains(";")) {
@@ -178,6 +179,11 @@ public class ParseFile
             final long endLine = System.currentTimeMillis();
             System.out.println((endLine - startLine) + "ms insert");
           }
+          //Saves location of current file processing to file state.tmp
+
+          Utility.setState(fileName,entryName,String.valueOf(lineCount));
+          lineCount++;
+
         }
       }
     } catch (final IOException e) {
