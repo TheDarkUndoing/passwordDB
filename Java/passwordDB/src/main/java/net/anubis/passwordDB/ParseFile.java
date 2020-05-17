@@ -120,7 +120,7 @@ public class ParseFile
     }
   }
 
-  public static void readTarEntry(final File tarfile, final int entryStartOffset, final TarArchiveEntry tarEntry,final DatabaseHandlerMariaDB mariadb) {
+  public static void resumeTarEntry(final File tarfile, final TarArchiveEntry tarEntry, final int lineNumber, final DatabaseHandlerMariaDB mariadb) {
     String fileName = tarfile.getName();
     String entryName = tarEntry.getName();
 
@@ -190,6 +190,78 @@ public class ParseFile
       e.printStackTrace();
     }
   }
+
+  String fileName = tarfile.getName();
+  String entryName = tarEntry.getName();
+  int lineNum = lineNumber;
+
+  FileInputStream fis;
+  final long entrySize = tarEntry.getSize();
+  long bytesRead = 0;
+  String string = null;
+  byte[] line = new byte[0];
+  String[] passCombo = null;
+  int lineCount = 0;
+
+  // byte[] readbuffer = new byte[1024];
+  final ArrayList<Byte> readBuffer = new ArrayList<Byte>();
+  // Skips to beginning of entryand then jumps 512 bytes to start of entry's data
+  // TAR Entries are 512 byte entries
+  try {
+    fis = new FileInputStream(tarfile);
+    //skip to entry name
+    fis.skip(entryStartOffset + 512);
+
+    byte curByte = 0;
+    while (bytesRead < entrySize) {
+
+      curByte = (byte) fis.read();
+      bytesRead++;
+
+      if (curByte != 10 && curByte != 13) {
+        while (curByte != 10 && curByte != 13) {
+          readBuffer.add(curByte);
+          curByte = (byte) fis.read();
+          bytesRead++;
+        }
+
+        line = byteListToArray(readBuffer);
+        readBuffer.clear();
+
+        string = new String(line, StandardCharsets.UTF_8);
+        System.out.println(lineCount);
+        // System.out.println(Arrays.toString(line));
+        // System.out.println(string);
+        if (string.contains(";")) {
+          final long startLine = System.currentTimeMillis();
+          passCombo = string.split(";");
+          if (passCombo.length == 2) {
+            mariadb.insert(passCombo);
+          }
+          final long endLine = System.currentTimeMillis();
+          System.out.println((endLine - startLine) + "ms insert");
+        } else if (string.contains(":")) {
+
+          final long startLine = System.currentTimeMillis();
+          passCombo = string.split(":");
+          if (passCombo.length == 2) {
+            mariadb.insert(passCombo);
+          }
+
+          final long endLine = System.currentTimeMillis();
+          System.out.println((endLine - startLine) + "ms insert");
+        }
+        //Saves location of current file processing to file state.tmp
+
+        Utility.setState(fileName,entryName,String.valueOf(lineCount));
+        lineCount++;
+
+      }
+    }
+  } catch (final IOException e) {
+    e.printStackTrace();
+  }
+}
 
   private static byte[] byteListToArray(final ArrayList<Byte> arrayList) {
     final byte[] a = new byte[arrayList.size()];
